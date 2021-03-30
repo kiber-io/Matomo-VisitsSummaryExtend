@@ -1,0 +1,9 @@
+{# This graphId must be unique for this report #}
+<h2 piwik-enriched-headline
+    data-graph-id="VisitsSummaryExtend.getIndexGraph"
+        >{{ 'General_EvolutionOverPeriod'|translate }}</h2>
+
+{{ graphEvolutionVisitsSummaryExtend|raw }}
+
+<h2 class="VisitsSummaryExtendReportTitle">{{ 'General_Report'|translate }}</h2>
+{% include "@VisitsSummaryExtend/_sparklines.twig" %}

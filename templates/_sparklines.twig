@@ -1,0 +1,88 @@
+{% if not isWidget %}
+<div class="row">
+    <div class="col m6">
+{% endif %}
+
+        <div class="sparkline">
+            {{ sparkline(urlSparklineNbVisits)|raw }}
+            {{ 'General_NVisits'|translate("<strong>"~nbVisits|number~"</strong>")|raw }}{% if displayUniqueVisitors %},
+                {{ 'VisitsSummaryExtend_NbUniqueVisitors'|translate("<strong>"~nbUniqVisitors|number~"</strong>")|raw }}{% endif %}
+        </div>
+        {% if nbUsers > 0 %}
+            {# Most of users will not have used `setUserId` so this would be confusingly zero #}
+            <div class="sparkline">
+                {{ sparkline(urlSparklineNbUsers)|raw }}
+                {{ 'General_NUsers'|translate("<strong>"~nbUsers|number~"</strong>")|raw }}
+            </div>
+        {% endif %}
+        <div class="sparkline">
+            {{ sparkline(urlSparklineAvgVisitDuration)|raw }}
+            {% set averageVisitDuration=averageVisitDuration|sumtime %}
+            {{ 'VisitsSummaryExtend_AverageVisitDuration'|translate("<strong>"~averageVisitDuration~"</strong>")|raw }}
+        </div>
+        <div class="sparkline">
+            {{ sparkline(urlSparklineBounceRate)|raw }}
+            {{ 'VisitsSummaryExtend_NbVisitsBounced'|translate("<strong>"~bounceRate|percent~"</strong>")|raw }}
+        </div>
+        <div class="sparkline">
+            {{ sparkline(urlSparklineActionsPerVisit)|raw }}
+            {{ 'VisitsSummaryExtend_NbActionsPerVisit'|translate("<strong>"~nbActionsPerVisit|number(1)~"</strong>")|raw }}
+        </div>
+        {% if showActionsPluginReports|default(false) %}
+        <div class="sparkline">
+            {{ sparkline(urlSparklineAvgGenerationTime)|raw }}
+            {% set averageGenerationTime=averageGenerationTime|sumtime %}
+            {{ 'VisitsSummaryExtend_AverageGenerationTime'|translate("<strong>"~averageGenerationTime~"</strong>")|raw }}
+        </div>
+        {% endif %}
+
+{% if not isWidget %}
+    </div>
+    <div class="col m6">
+{% endif %}
+
+        {% if showActionsPluginReports|default(false) %}
+            {% if showOnlyActions %}
+                <div class="sparkline">
+                    {{ sparkline(urlSparklineNbActions)|raw }}
+                    {{ 'VisitsSummaryExtend_NbActionsDescription'|translate("<strong>"~nbActions|number~"</strong>")|raw }}
+                </div>
+            {% else %}
+                <div class="sparkline">
+                    {{ sparkline(urlSparklineNbPageviews)|raw }}
+                    {{ 'VisitsSummaryExtend_NbPageviewsDescription'|translate("<strong>"~nbPageviews|number~"</strong>")|trim|raw }},
+                    {{ 'VisitsSummaryExtend_NbUniquePageviewsDescription'|translate("<strong>"~nbUniquePageviews|number~"</strong>")|raw }}
+                </div>
+                {% if displaySiteSearch %}
+                    <div class="sparkline">
+                        {{ sparkline(urlSparklineNbSearches)|raw }}
+                        {{ 'VisitsSummaryExtend_NbSearchesDescription'|translate("<strong>"~nbSearches|number~"</strong>")|trim|raw }},
+                        {{ 'VisitsSummaryExtend_NbKeywordsDescription'|translate("<strong>"~nbKeywords|number~"</strong>")|raw }}
+                    </div>
+                {% endif %}
+                <div class="sparkline">
+                        {{ sparkline(urlSparklineNbDownloads)|raw }}
+                        {{ 'VisitsSummaryExtend_NbDownloadsDescription'|translate("<strong>"~nbDownloads|number~"</strong>")|trim|raw }},
+                        {{ 'VisitsSummaryExtend_NbUniqueDownloadsDescription'|translate("<strong>"~nbUniqueDownloads|number~"</strong>")|raw }}
+                </div>
+                <div class="sparkline">
+                        {{ sparkline(urlSparklineNbOutlinks)|raw }}
+                        {{ 'VisitsSummaryExtend_NbOutlinksDescription'|translate("<strong>"~nbOutlinks|number~"</strong>")|trim|raw }},
+                        {{ 'VisitsSummaryExtend_NbUniqueOutlinksDescription'|translate("<strong>"~nbUniqueOutlinks|number~"</strong>")|raw }}
+                </div>
+                {% endif %}
+        {% endif %}
+        <div class="sparkline">
+                {{ sparkline(urlSparklineMaxActions)|raw }}
+                {{ 'VisitsSummaryExtend_MaxNbActions'|translate("<strong>"~maxActions|number~"</strong>")|raw }}
+        </div>
+
+        {{ postEvent('Template.VisitsSummaryExtendOverviewSparklines') }}
+
+{% if not isWidget %}
+    </div>
+</div>
+{% endif %}
+
+{% include "_sparklineFooter.twig" %}
+
